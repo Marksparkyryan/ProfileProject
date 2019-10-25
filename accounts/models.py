@@ -8,10 +8,9 @@ from cities_light.models import Country, City
 from ckeditor.fields import RichTextField
 
 
-# Create your models here.
-
 class Profile(models.Model):
-
+    """Model describing dditional info related to each user
+    """
     def get_avatar():
         path = settings.MEDIA_ROOT + '/owls'
         files = os.listdir(path)
@@ -28,12 +27,11 @@ class Profile(models.Model):
         (CAT, 'Cats'),
         (DOG, 'Dogs')
     )
-    cats_or_dogs = models.CharField(max_length=4 , choices=CHOICES, default=DOG)
-    favourite_colour = models.CharField(max_length=32, blank=True, null=True) 
+    cats_or_dogs = models.CharField(max_length=4, choices=CHOICES, default=DOG)
+    favourite_colour = models.CharField(max_length=32, blank=True, null=True)
     hobby = models.CharField(max_length=32, blank=True, null=True)
     country = models.ForeignKey(Country, blank=True, null=True)
     city = models.ForeignKey(City, blank=True, null=True)
 
     def __str__(self):
         return self.user.username
-
