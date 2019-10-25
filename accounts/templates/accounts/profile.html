@@ -1,0 +1,100 @@
+{% extends "layout.html" %} {% load static %} {% block title %}Profile |
+{{ super }}{% endblock %} {% block body %}
+<div class="bounds circle--page profile_page">
+    <div class="avatar_wrapper">
+        <span class="avatar_base">
+            <img class="avatar_circle" src="{{ user.profile.avatar.url }}" /></span>
+    </div>
+    <div class="grid-100 under_banner">
+        {{ user.first_name.label }}
+        <h1 class="headline">{{ user.username|capfirst }}</h1>
+    </div>
+
+    <div class="grid-30">
+        <h1 class="custom_label">Details</h1>
+        <br>
+        <p>
+            Name: 
+            {{ user.first_name }}
+            {{ user.last_name }}
+        <br>
+            Date of Birth:
+            {{ user.profile.date_of_birth }}
+       <br>
+            Location: 
+            {% firstof user.profile.city user.profile.country "Unknown" %}
+           
+ 
+        </p>
+        <hr>
+
+        <h1 class="custom_label">Contact</h1>
+        <br>
+        <p>
+            Email: {{ user.email }}
+        </p>
+        <hr>
+        <h1 class="custom_label">Misc</h1>
+        <br>
+        <p>
+            Cats or Dogs: {{ user.profile.cats_or_dogs }}
+            <br>
+            Hobby: {{ user.profile.hobby }}
+            <br>
+            Favourite Colour: {{ user.profile.favourite_colour }}
+        </p>
+        <hr>
+    </div>
+    <div class="grid-70">
+        <h1 class="custom_label">Bio</h1>
+        <p>
+            {{ user.profile.bio|safe }}
+        </p>     
+    </div>
+    <div class="footer_space">
+
+    </div>
+    
+
+    
+</div>
+
+<div class="button_track">
+        <div class="btn_wrapper" id="btn_wrapper">
+                <span class="circle_btn" id="circle_button">
+                    <a class="btn" href="{% url 'accounts:edit_profile' %}"><i class="material-icons md-48 md-light"
+                            style="color:black;font-size:32px;margin-top:13px;">edit
+                        </i>
+                </span>
+            </div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#info_message').on('click', function() {
+            $('#info_message').hide();
+        });
+    });
+</script>
+
+
+<script type="text/javascript">
+    $(document).scroll(function () {
+        checkOffset();
+    });
+
+    function checkOffset() {
+        if ($('#circle_button').offset().top + $('#circle_button').height()
+            >= $('#custom_footer').offset().top - 50)
+            $('#circle_button').css('position', 'absolute');
+        if ($(document).scrollTop() + window.innerHeight < $('#custom_footer').offset().top)
+            $('#circle_button').css('position', 'fixed'); // restore when you scroll up
+    }
+</script>
+
+
+
+{% endblock %}

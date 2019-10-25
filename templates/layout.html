@@ -1,0 +1,107 @@
+{% load static from staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <!-- Basic Page Needs
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <meta charset="utf-8">
+    <title>{% block title %}Circle{% endblock %}</title>
+
+    <!-- Mobile Specific Metas
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- FONTS
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link href='https://fonts.googleapis.com/css?family=Work+Sans:400,500' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Cousine' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Shrikhand&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Damion&display=swap" rel="stylesheet">
+
+
+    <!-- CSS
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link rel="stylesheet" href="{% static "css/global.css" %}">
+    {% block css%}{% endblock %}
+
+    <!-- JS
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script type="text/javascript" src="{% static "js/autogrow.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/global.js" %}"></script>
+    <!-- ICONS
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+</head>
+{% if messages %}
+<div class="info_messages centered">
+    {% for message in messages %}
+    <p {% if message.tags %} class="{{ message.tags }}" {% endif %} id="info_message">{{ message }}</p>
+    {% endfor %}
+</div>
+{% endif %}
+<div class="alert centered" role="alert" id="alert"></div>
+
+<body>
+    <header class="circle--header">
+        <div class="bounds">
+            <div class="circle--fluid">
+                <div class="circle--fluid--cell">
+                    <h1 class="hide-text circle--logo"><a class="logo" href="{% url 'home' %}">Circle</a>
+                    </h1>
+                </div>
+                <div class="circle--fluid--cell circle--fluid--primary">
+                    <nav>
+                        <ul class="circle--inline">
+                            {% if user.is_authenticated %}
+                            <li><a href="{% url 'accounts:profile' user_pk=user.id %}">profile</a></li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+                <div class="circle--fluid--cell circle--fluid--secondary">
+
+                    <nav>
+                        <ul class="circle--inline">
+                            {% if not user.is_authenticated %}
+                            <li><a href="{% url 'accounts:sign_up' %}">Sign up</a></li>
+                            <li><a href="{% url 'accounts:sign_in' %}">Sign in</a></li>
+                            {% else %}
+                            <li><a href="{% url 'accounts:sign_out' %}">Sign out</a></li>
+                            {% endif %}
+
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="custom_banner">
+            
+    </section>
+
+    <div class="bounds circle--page">
+        {% block body %}{% endblock %}
+        {% block javascript %}
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#info_message').on('click', function() {
+                    $('#info_message').hide();
+                });
+            });
+        </script>
+        {% endblock %}
+    </div>
+
+</body>
+<footer class="custom_footer" id="custom_footer">
+
+</footer>
+
+</html>

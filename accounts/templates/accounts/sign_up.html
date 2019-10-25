@@ -1,0 +1,63 @@
+{% extends "layout.html" %} {% load static %} {% block title %}Sign Up |
+{{ super }}{% endblock %} {% block body %}
+<div class="home-section">
+  <div class="home-container">
+    <div class="grid-30">
+      <h1>Sign up!</h1>
+      <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis at id
+        quibusdam reprehenderit! Exercitationem delectus dolor repellendus nemo
+        optio, sed cupiditate hic voluptas. Placeat quae omnis facere ipsa qui
+        deserunt.
+      </p>
+    </div>
+    <div class="grid-70">
+      <form method="POST" action="{% url 'accounts:sign_up' %}">
+        {% csrf_token %}
+        <p>
+          {{ form.username.label }}
+          {{ form.username }}
+          {{ form.username.help_text }}
+        </p>
+        <p>
+          {{ form.password1.label }}
+          {{ form.password1 }}
+          {{ form.password1.help_text }}
+        </p>
+        <p>
+          {{ form.password2.label }}
+          {{ form.password2 }}
+          {{ form.password2.help_text }}
+        </p>
+
+        <input type="submit" class="button-primary" value="Sign Up" />
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %} {% block javascript %}
+<script type="text/javascript" src="{% static 'js/zxcvbn.js' %}"></script>
+
+<script>
+  var strength = {
+    0: "#ef9a9a",
+    1: "#ffab91",
+    2: "#ffcc80",
+    3: "#fff59d",
+    4: "#14cba8"
+  };
+
+  var password = document.getElementById("id_password1");
+  var text = document.getElementById("password-strength-text");
+
+  password.addEventListener("input", function() {
+    var val = password.value;
+    var result = zxcvbn(val);
+
+    // Update the password strength meter
+    password.style.backgroundColor = "#f5f5f6";
+    password.style.backgroundColor = strength[result.score];
+  });
+</script>
+{% endblock %}

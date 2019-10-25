@@ -1,0 +1,325 @@
+{% extends "layout.html" %} {% load static %} {% block title %}Profile |
+{{ super }}{% endblock %} {% block body %}
+
+
+
+<div class="bounds circle--page profile_page">
+    <form method="POST" id="userform_and_profileform" data-cities-url="{% url 'accounts:ajax_load_cities' %}"
+        enctype="multipart/form-data" action="">
+        {% csrf_token %}
+        <div class="avatar_wrapper">
+            <span class="avatar_base avatar_update">
+                <label class="label" data-toggle="tooltip" title="" data-original-title="Change">
+                    <img name="id_avatar" id="id_avatar" class="avatar_circle" src="{{ user.profile.avatar.url }}"
+                        alt="avatar" />
+                    <input type="file" class="sr-only" id="input" name="image" accept="image/*" hidden="True">
+                    <p>Change</p>
+                </label>
+
+        </div>
+
+
+
+        <div class="grid-100 under_banner">
+            {{ user.first_name.label }}
+            <h1 class="headline">{{ user.username }}</h1>
+        </div>
+
+
+        <div class="grid-30">
+            <p>
+                {{ user_form.first_name.errors }}
+                {{ user_form.first_name.label }}
+                {{ user_form.first_name }}
+            </p>
+            <p>
+                {{ user_form.last_name.errors }}
+                {{ user_form.last_name.label }}
+                {{ user_form.last_name }}
+            </p>
+            <p>
+                {{ profile_form.date_of_birth.errors }}
+                {{ profile_form.date_of_birth.label }}
+                {{ profile_form.date_of_birth }}
+            </p>
+            <p>
+                {{ profile_form.cats_or_dogs.errors }}
+                {{ profile_form.cats_or_dogs.label }}
+                {{ profile_form.cats_or_dogs }}
+            </p>
+            <p>
+                {{ profile_form.hobby.errors }}
+                {{ profile_form.hobby.label }}
+                {{ profile_form.hobby }}
+            </p>
+            <p>
+                {{ profile_form.country.errors }}
+                {{ profile_form.country.label }}
+                {{ profile_form.country }}
+            </p>
+            <p>
+                {{ profile_form.city.errors }}
+                {{ profile_form.city.label }}
+                {{ profile_form.city }}
+            </p>
+            <p>
+                {{ profile_form.favourite_colour.errors }}
+                {{ profile_form.favourite_colour.label }}
+                {{ profile_form.favourite_colour }}
+            </p>
+        </div>
+
+        <div class="grid-70">
+            {{ profile_form.bio.label }}
+            <div class="bio_wrapper">
+
+                {{ profile_form.bio.errors }}
+                {{ profile_form.bio }}
+
+
+            </div>
+            <p>
+                {{ user_form.email.errors }}
+                {{ user_form.email.label }}
+                {{ user_form.email }}
+            </p>
+            <p>
+                {{ user_form.email2.errors }}
+                {{ user_form.email2.label }}
+                {{ user_form.email2 }}
+            </p>
+            <p>
+                {{ user_form.password.errors }}
+                {{ user_form.password.label }}
+                {{ user_form.password }}
+            </p>
+
+            <input type="submit" class="button-primary" value="Update Profile" />
+            <a href="{% url 'accounts:change_password' %}" class="button button-info">Change Password</a>
+        </div>
+</div>
+</form>
+</div>
+<!--avatar modal-->
+<div class="modal_container">
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">Crop the image</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="img-container">
+                        <img id="image" src="{{ user.profile.avatar.url }}">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="button-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="button-primary" id="crop">Crop</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--avatar modal-->
+{% endblock %}
+<br />
+{% block css %}
+{{ profile_form.media.css }}
+{{ avatar_form.media.css }}
+{% endblock %}
+<br />
+{% block javascript %}
+{{ profile_form.media.js }}
+{{ avatar_form.media.js }}
+<script type="text/javascript">
+    // Datepicker js
+    $("#id_date_of_birth").datepicker({
+        autoclose: true,
+        orientation: "left bottom",
+        forceParse: false,
+        width: '50px',
+    });
+</script>
+
+
+
+
+
+
+<script type="text/javascript">
+
+    window.addEventListener('DOMContentLoaded', function () {
+        var avatar = document.getElementById('id_avatar');
+        var image = document.getElementById('image');
+        var input = document.getElementById('input');
+        var $progress = $('.progress');
+        var $progressBar = $('.progress-bar');
+        var $alert = $('.alert');
+        var $modal = $('#modal');
+        var cropper;
+
+
+
+        input.addEventListener('change', function (e) {
+            var files = e.target.files;
+            var done = function (url) {
+                input.value = '';
+                image.src = url;
+                $alert.hide();
+                $modal.modal('show');
+            };
+            var reader;
+            var file;
+            var url;
+
+            if (files && files.length > 0) {
+                file = files[0];
+
+                if (URL) {
+                    done(URL.createObjectURL(file));
+                } else if (FileReader) {
+                    reader = new FileReader();
+                    reader.onload = function (e) {
+                        done(reader.result);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        });
+
+        $modal.on('shown.bs.modal', function () {
+            cropper = new Cropper(image, {
+                aspectRatio: 1,
+                viewMode: 3,
+            });
+        }).on('hidden.bs.modal', function () {
+            cropper.destroy();
+            cropper = null;
+        });
+
+        document.getElementById('crop').addEventListener('click', function () {
+            var initialAvatarURL;
+            var canvas;
+
+            $modal.modal('hide');
+
+            if (cropper) {
+                canvas = cropper.getCroppedCanvas({
+                    width: 450,
+                    height: 450,
+                });
+                initialAvatarURL = avatar.src;
+                avatar.src = canvas.toDataURL('image/jpeg', 1);
+                $progress.show();
+                $alert.removeClass('alert-success alert-warning');
+                canvas.toBlob(function (blob) {
+                    var formData = new FormData();
+
+                    function getCookie(name) {
+                        var cookieValue = null;
+                        if (document.cookie && document.cookie !== '') {
+                            var cookies = document.cookie.split(';');
+                            for (var i = 0; i < cookies.length; i++) {
+                                var cookie = cookies[i].trim();
+                                // Does this cookie string begin with the name we want?
+                                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                    break;
+                                }
+                            }
+                        }
+                        return cookieValue;
+                    }
+                    var csrftoken = getCookie('csrftoken');
+
+                    function csrfSafeMethod(method) {
+                        // these HTTP methods do not require CSRF protection
+                        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+                    }
+
+
+                    formData.append('id_avatar', blob, 'new_avatar.jpg');
+                    $.ajaxSetup({
+                        beforeSend: function (xhr, settings) {
+                            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                            }
+                        }
+                    });
+
+                    $.ajax('', {
+                        method: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+
+
+                        xhr: function () {
+                            var xhr = new XMLHttpRequest();
+
+                            xhr.upload.onprogress = function (e) {
+                                var percent = '0';
+                                var percentage = '0%';
+
+                                if (e.lengthComputable) {
+                                    percent = Math.round((e.loaded / e.total) * 100);
+                                    percentage = percent + '%';
+                                    $progressBar.width(percentage).attr('aria-valuenow', percent).text(percentage);
+                                }
+                            };
+
+                            return xhr;
+                        },
+
+                        success: function () {
+                            $alert.show().addClass('alert-success').text('Avatar uploaded successfully!');
+                        },
+
+                        error: function () {
+                            avatar.src = initialAvatarURL;
+                            $alert.show().addClass('alert-warning').text('Error uploading avatar!');
+                        },
+
+                        complete: function () {
+                            $progress.hide();
+                        },
+                    });
+                });
+            }
+        });
+    });
+
+</script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#alert').on('click', function () {
+            $('#alert').hide();
+        });
+    });
+</script>
+
+<script>
+    $("#id_country").change(function () {
+        var url = $("#userform_and_profileform").attr("data-cities-url");  // get the url of the `load_cities` view
+        var countryId = $(this).val();  // get the selected country ID from the HTML input
+
+        $.ajax({                       // initialize an AJAX request
+            url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+            data: {
+                'country': countryId       // add the country id to the GET parameters
+            },
+            success: function (data) {   // `data` is the return of the `load_cities` view function
+                $("#id_city").html(data);  // replace the contents of the city input with the data that came from the server
+            }
+        });
+
+    });
+</script>
+
+{% endblock %}
