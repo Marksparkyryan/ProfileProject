@@ -12,18 +12,24 @@ from .models import Profile, User, City
 
 
 def sign_in(request):
+    """View that handles user sign-in and redirects to next or their 
+    profile
+    """
     form = AuthenticationForm()
     if request.method == 'POST':
-        
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             if form.user_cache is not None:
                 user = form.user_cache
                 if user.is_active:
                     login(request, user)
-                    next_url = request.POST.get('next', '/')
-                    messages.success(request, f'Welcome back, {user.username}!')
-                    return HttpResponseRedirect(next_url) # TODO: go to profile
+                    next_url = request.POST.get(
+                        'next',
+                        reverse('accounts:profile', kwargs={'user_pk': user.pk})
+                    )
+                    messages.success(
+                        request, f'Welcome back, {user.username}!')
+                    return HttpResponseRedirect(next_url)
                 else:
                     messages.error(
                         request,
@@ -38,6 +44,9 @@ def sign_in(request):
 
 
 def sign_up(request):
+    """View that handles user sign-up and redirects to user's incomplete 
+    profile
+    """
     form = UserCreationForm()
     if request.method == 'POST':
         form = UserCreationForm(data=request.POST)
@@ -53,14 +62,20 @@ def sign_up(request):
                 request,
                 "You're now a user! You've been signed in, too."
             )
-            return HttpResponseRedirect(reverse('accounts:profile', kwargs={'user_pk': user.id}))  # TODO: go to profile
-        messages.error(request,"Something went wrong!")
+            return HttpResponseRedirect(reverse('accounts:profile',
+                                                kwargs={'user_pk': user.id})
+                                        )
+        messages.error(request, "Something went wrong!")
         return render(request, 'accounts/sign_up.html', {'form': form})
     return render(request, 'accounts/sign_up.html', {'form': form})
 
 
 @login_required
 def edit_profile(request):
+    """View that handles the editing of the request user's profile. This is done
+    through data received by the user_form, profile_form, and the 
+    avatar_form (the avatar form is accepted as an ajax post).
+    """
     user = request.user
     existing_data = {
         'first_name': user.first_name,
@@ -86,7 +101,9 @@ def edit_profile(request):
             profile.user = user
             profile.save()
             messages.success(request, 'Profile updated successfully!')
-            return HttpResponseRedirect(reverse('accounts:profile', kwargs={'user_pk': user.id}))
+            return HttpResponseRedirect(reverse('accounts:profile',
+                                                kwargs={'user_pk': user.id})
+                                        )
         avatar_form = AvatarForm(request.POST, request.FILES, instance=profile)
         if avatar_form.is_valid() and request.is_ajax():
             profile.avatar = request.FILES['id_avatar']
@@ -101,9 +118,11 @@ def edit_profile(request):
     return render(request, 'accounts/edit_profile.html', context)
 
 
-
 @login_required
 def change_password(request):
+    """View that handles changing the user's password. Success redirects 
+    user to their profile.
+    """
     user = request.user
     password_form = ChangePasswordForm(user=user)
     if request.method == 'POST':
@@ -120,13 +139,16 @@ def change_password(request):
         'user': user,
     }
     return render(request, 'accounts/change_password.html', context)
-    
+
 
 def profile(request, user_pk):
+    """View that handles the detail view of the user and the user's 
+    profile
+    """
     user = get_object_or_404(User, pk=user_pk)
     profile = get_object_or_404(Profile, user=user)
     if request.user == user:
-        missing = 0
+        missing = 0 #inform the user of empty profile fields
         for field in profile._meta.fields:
             field_value = field.value_from_object(profile)
             if not field_value and field_value != 0:
@@ -136,18 +158,30 @@ def profile(request, user_pk):
             if not field_value and field_value != 0:
                 missing += 1
         if missing:
-            messages.warning(request, f'{missing} field{pluralize(missing)} in your profile {pluralize(missing, "is,are")} missing!')
+            messages.warning(
+                request,
+                f'''{missing} field{pluralize(missing)} in your profile 
+                {pluralize(missing, "is,are")} missing!
+                ''') # using the pluralize template filter directly in the view
 
     return render(request, 'accounts/profile.html', {'user': user})
 
 
 def sign_out(request):
+    """View handling the user's sign out and redirecting to the home 
+    page
+    """
     logout(request)
     messages.success(request, "You've been signed out. Come back soon!")
     return HttpResponseRedirect(reverse('home'))
 
 
 def load_cities(request):
+    """When the edit profile view is loaded, cities are emitted from the 
+    options until a country is selected. When a country is selected, an 
+    ajax request to this view will return a list of cities (back to the 
+    edit profile template) filtered by the selected country  
+    """
     country_code = request.GET.get('country')
     cities = City.objects.filter(country_id=country_code).order_by('name')
     return render(request, 'accounts/city_dropdown_list_options.html', {'cities': cities})
