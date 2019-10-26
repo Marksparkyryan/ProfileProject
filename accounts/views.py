@@ -1,7 +1,9 @@
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
+from django.contrib.auth import (authenticate, login, logout,
+                                 update_session_auth_hash)
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import (AuthenticationForm, UserCreationForm,
+                                       UserChangeForm)
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
@@ -25,7 +27,8 @@ def sign_in(request):
                     login(request, user)
                     next_url = request.POST.get(
                         'next',
-                        reverse('accounts:profile', kwargs={'user_pk': user.pk})
+                        reverse('accounts:profile', 
+                        kwargs={'user_pk': user.pk})
                     )
                     messages.success(
                         request, f'Welcome back, {user.username}!')
@@ -72,9 +75,9 @@ def sign_up(request):
 
 @login_required
 def edit_profile(request):
-    """View that handles the editing of the request user's profile. This is done
-    through data received by the user_form, profile_form, and the 
-    avatar_form (the avatar form is accepted as an ajax post).
+    """View that handles the editing of the request user's profile. 
+    This is donethrough data received by the user_form, profile_form, 
+    and the avatar_form (the avatar form is accepted as an ajax post).
     """
     user = request.user
     existing_data = {
@@ -184,4 +187,8 @@ def load_cities(request):
     """
     country_code = request.GET.get('country')
     cities = City.objects.filter(country_id=country_code).order_by('name')
-    return render(request, 'accounts/city_dropdown_list_options.html', {'cities': cities})
+    return render(
+        request,
+        'accounts/city_dropdown_list_options.html',
+        {'cities': cities}
+    )
