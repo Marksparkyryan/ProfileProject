@@ -4,7 +4,7 @@
 {% block body %}
 <div class="bounds circle--page">
   <div class="home-container">
-    <div class="grid-100">
+    <div class="grid-100 centered">
       <h1>All About You</h1>
       <p>
         Show the world who you are. Easily display your name, show them your
@@ -14,7 +14,7 @@
   </div>
 
   <!-- CAROUSEL -->
-  <div class="grid-100">
+  <div class="grid-100 centered">
     <div class="slider-container">
       <div class="slider">
         {% for user in users %}
@@ -28,7 +28,16 @@
       </div>
     </div>
   </div>
-  <div class="footer_space"></div>
+  <div class="home-container">
+      <div class="grid-100 centered">
+        <h1>It's Easy to Sign Up!</h1>
+        <p>
+          Create your profile now.
+        </p>
+        <a href="{% url 'accounts:sign_up' %}" class="button button-primary centered">Sign Up</a>
+      </div>
+    </div>
+  
 </div>
 {% endblock %}
 

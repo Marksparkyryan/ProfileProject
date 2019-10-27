@@ -59,7 +59,7 @@
                     <nav>
                         <ul class="circle--inline">
                             {% if user.is_authenticated %}
-                            <li><a href="{% url 'accounts:profile' user_pk=user.id %}">profile</a></li>
+                            <li><a href="{% url 'accounts:profile' user_pk=user.id %}">Profile</a></li>
                             {% endif %}
                         </ul>
                     </nav>
@@ -69,10 +69,10 @@
                     <nav>
                         <ul class="circle--inline">
                             {% if not user.is_authenticated %}
-                            <li><a href="{% url 'accounts:sign_up' %}">Sign up</a></li>
-                            <li><a href="{% url 'accounts:sign_in' %}">Sign in</a></li>
+                            <li><a href="{% url 'accounts:sign_up' %}">Sign Up</a></li>
+                            <li><a href="{% url 'accounts:sign_in' %}">Sign In</a></li>
                             {% else %}
-                            <li><a href="{% url 'accounts:sign_out' %}">Sign out</a></li>
+                            <li><a href="{% url 'accounts:sign_out' %}">Sign Out</a></li>
                             {% endif %}
 
                         </ul>
@@ -100,6 +100,33 @@
 
 </body>
 <footer class="custom_footer" id="custom_footer">
+    <div class="bounds">
+        <div class="grid-30">
+            <ul>
+                <li><a href="{% url 'home' %}">Home</a></li>
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'accounts:profile' user_pk=user.id %}">Profile</a></li>
+                <li><a href="{% url 'accounts:edit_profile' %}">Edit Profile</a></li>
+                <li><a href="{% url 'accounts:sign_out' %}">Sign Out</a></li>
+                {% else %}
+                <li><a href="{% url 'accounts:sign_in' %}">Sign In</a></li>
+                <li><a href="{% url 'accounts:sign_up' %}">Sign Up</a></li>
+                {% endif %}
+            </ul>
+        </div>
+        <div class="grid-30">
+            <ul>
+                <li>About</li>
+                <li>Contact</li>
+            </ul>
+        </div>
+        <div class="grid-30">
+            <ul>
+                <li><a href="https://www.vecteezy.com/free-vector/owl">Owl Vectors by Vecteezy</a></li>
+            </ul>          
+        </div>
+    </div>
+    
 </footer>
 
 </html>

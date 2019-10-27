@@ -1,13 +1,22 @@
-{% extends "layout.html" %} 
+{% extends "layout.html" %}
 {% block title %}Sign In | {{ super }}{% endblock %}
 
 {% block body %}
-<form method="POST" action="{% url 'accounts:sign_in' %}">
-  {% csrf_token %}
-  {{ form.as_p }}
-  {% if request.GET.next %}
-  <input type="hidden" name="next" value="{{ request.GET.next }}" />
-  {% endif %}
-  <input type="submit" class="button-primary" value="Sign In" />
-</form>
+<div class="home-section">
+  <div class="home-container">
+    <div class="grid-30">
+      <h1>Sign In!</h1>
+    </div>
+    <div class="grid-70">
+      <form method="POST" action="{% url 'accounts:sign_in' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {% if request.GET.next %}
+        <input type="hidden" name="next" value="{{ request.GET.next }}" />
+        {% endif %}
+        <input type="submit" class="button-primary" value="Sign In" />
+      </form>
+    </div>
+  </div>
+</div>
 {% endblock %}
