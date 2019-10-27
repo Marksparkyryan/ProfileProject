@@ -2998,6 +2998,7 @@ img {
   width: 185px;
   border-radius: 50%;
   box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.2);
+  margin: auto;
   
 }
 
@@ -3007,8 +3008,11 @@ img {
 }
 
 .slider_avatar_wrapper h3 {
-  text-align: center;
-  
+  text-align: center; 
+}
+
+.slider_avatar_wrapper a {
+  text-decoration: none; 
 }
 
 .under_banner {

@@ -148,16 +148,16 @@ def profile(request, user_pk):
     """View that handles the detail view of the user and the user's 
     profile
     """
-    user = get_object_or_404(User, pk=user_pk)
-    profile = get_object_or_404(Profile, user=user)
-    if request.user == user:
+    profile_user = get_object_or_404(User, pk=user_pk)
+    profile = get_object_or_404(Profile, user=profile_user)
+    if request.user == profile_user:
         missing = 0 #inform the user of empty profile fields
         for field in profile._meta.fields:
             field_value = field.value_from_object(profile)
             if not field_value and field_value != 0:
                 missing += 1
-        for field in user._meta.fields:
-            field_value = field.value_from_object(user)
+        for field in profile_user._meta.fields:
+            field_value = field.value_from_object(profile_user)
             if not field_value and field_value != 0:
                 missing += 1
         if missing:
@@ -167,7 +167,7 @@ def profile(request, user_pk):
                 {pluralize(missing, "is,are")} missing!
                 ''') # using the pluralize template filter directly in the view
 
-    return render(request, 'accounts/profile.html', {'user': user})
+    return render(request, 'accounts/profile.html', {'profile_user': profile_user})
 
 
 def sign_out(request):

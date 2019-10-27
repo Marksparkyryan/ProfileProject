@@ -6,12 +6,12 @@
 <div class="bounds circle--page profile_page">
     <div class="avatar_wrapper">
         <span class="avatar_base">
-            <img class="avatar_circle" src="{{ user.profile.avatar.url }}" />
+            <img class="avatar_circle" src="{{ profile_user.profile.avatar.url }}" />
         </span>
     </div>
     <div class="grid-100 under_banner">
-        {{ user.first_name.label }}
-        <h1 class="headline">{{ user.username|capfirst }}</h1>
+        {{ profile_user.first_name.label }}
+        <h1 class="headline">{{ profile_user.username|capfirst }}</h1>
     </div>
 
     <div class="grid-30">
@@ -19,54 +19,54 @@
         <br>
         <p>
             Name:
-            {{ user.first_name }}
-            {{ user.last_name }}
+            {{ profile_user.first_name }}
+            {{ profile_user.last_name }}
             <br>
             Date of Birth:
-            {{ user.profile.date_of_birth }}
+            {{ profile_user.profile.date_of_birth }}
             <br>
             Location:
-            {% firstof user.profile.city user.profile.country "Unknown" %}
+            {% firstof profile_user.profile.city profile_user.profile.country "Unknown" %}
         </p>
         <hr>
 
         <h1 class="custom_label">Contact</h1>
         <br>
         <p>
-            Email: {{ user.email }}
+            Email: {{ profile_user.email }}
         </p>
         <hr>
         <h1 class="custom_label">Misc</h1>
         <br>
         <p>
-            Cats or Dogs: {{ user.profile.cats_or_dogs }}
+            Cats or Dogs: {{ profile_user.profile.cats_or_dogs }}
             <br>
-            Hobby: {{ user.profile.hobby }}
+            Hobby: {{ profile_user.profile.hobby }}
             <br>
-            Favourite Colour: {{ user.profile.favourite_colour }}
+            Favourite Colour: {{ profile_user.profile.favourite_colour }}
         </p>
         <hr>
     </div>
     <div class="grid-70">
         <h1 class="custom_label">Bio</h1>
-        <p>
-            {{ user.profile.bio|safe }}
-        </p>
+        <p></p>
+            {{ profile_user.profile.bio|safe }}
     </div>
-    <div class="footer_space">
+    <div class="footer_space">  
 
     </div>
 </div>
 
+{% if user.id == profile_user.id %}
 <div class="button_track">
     <div class="btn_wrapper" id="btn_wrapper">
         <span class="circle_btn" id="circle_button">
             <a class="btn" href="{% url 'accounts:edit_profile' %}"><i class="material-icons md-48 md-light"
-                    style="color:black;font-size:32px;margin-top:13px;">edit
-                </i>
+                    style="color:black;font-size:32px;margin-top:13px;">edit</i>
         </span>
-    </div>
+    </div>      
 </div>
+{% endif %}
 {% endblock %}
 
 {% block javascript %}

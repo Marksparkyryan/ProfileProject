@@ -59,7 +59,7 @@
                     <nav>
                         <ul class="circle--inline">
                             {% if user.is_authenticated %}
-                            <li><a href="{% url 'accounts:profile' user_pk=user.id %}">Profile</a></li>
+                            <li><a href="{% url 'accounts:profile' user_pk=user.id %}">My Profile</a></li>
                             {% endif %}
                         </ul>
                     </nav>
@@ -105,7 +105,7 @@
             <ul>
                 <li><a href="{% url 'home' %}">Home</a></li>
                 {% if user.is_authenticated %}
-                <li><a href="{% url 'accounts:profile' user_pk=user.id %}">Profile</a></li>
+                <li><a href="{% url 'accounts:profile' user_pk=user.id %}">My Profile</a></li>
                 <li><a href="{% url 'accounts:edit_profile' %}">Edit Profile</a></li>
                 <li><a href="{% url 'accounts:sign_out' %}">Sign Out</a></li>
                 {% else %}
