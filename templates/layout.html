@@ -83,15 +83,14 @@
     </header>
 
     <section class="custom_banner">
-            
     </section>
 
     <div class="bounds circle--page">
         {% block body %}{% endblock %}
         {% block javascript %}
         <script type="text/javascript">
-            $(document).ready(function() {
-                $('#info_message').on('click', function() {
+            $(document).ready(function () {
+                $('#info_message').on('click', function () {
                     $('#info_message').hide();
                 });
             });
@@ -101,7 +100,6 @@
 
 </body>
 <footer class="custom_footer" id="custom_footer">
-
 </footer>
 
 </html>

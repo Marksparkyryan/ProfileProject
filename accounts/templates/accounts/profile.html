@@ -1,9 +1,13 @@
-{% extends "layout.html" %} {% load static %} {% block title %}Profile |
-{{ super }}{% endblock %} {% block body %}
+{% extends "layout.html" %} 
+{% load static %} 
+{% block title %}Profile |{{ super }}{% endblock %} 
+
+{% block body %}
 <div class="bounds circle--page profile_page">
     <div class="avatar_wrapper">
         <span class="avatar_base">
-            <img class="avatar_circle" src="{{ user.profile.avatar.url }}" /></span>
+            <img class="avatar_circle" src="{{ user.profile.avatar.url }}" />
+        </span>
     </div>
     <div class="grid-100 under_banner">
         {{ user.first_name.label }}
@@ -14,17 +18,15 @@
         <h1 class="custom_label">Details</h1>
         <br>
         <p>
-            Name: 
+            Name:
             {{ user.first_name }}
             {{ user.last_name }}
-        <br>
+            <br>
             Date of Birth:
             {{ user.profile.date_of_birth }}
-       <br>
-            Location: 
+            <br>
+            Location:
             {% firstof user.profile.city user.profile.country "Unknown" %}
-           
- 
         </p>
         <hr>
 
@@ -49,37 +51,32 @@
         <h1 class="custom_label">Bio</h1>
         <p>
             {{ user.profile.bio|safe }}
-        </p>     
+        </p>
     </div>
     <div class="footer_space">
 
     </div>
-    
-
-    
 </div>
 
 <div class="button_track">
-        <div class="btn_wrapper" id="btn_wrapper">
-                <span class="circle_btn" id="circle_button">
-                    <a class="btn" href="{% url 'accounts:edit_profile' %}"><i class="material-icons md-48 md-light"
-                            style="color:black;font-size:32px;margin-top:13px;">edit
-                        </i>
-                </span>
-            </div>
+    <div class="btn_wrapper" id="btn_wrapper">
+        <span class="circle_btn" id="circle_button">
+            <a class="btn" href="{% url 'accounts:edit_profile' %}"><i class="material-icons md-48 md-light"
+                    style="color:black;font-size:32px;margin-top:13px;">edit
+                </i>
+        </span>
+    </div>
 </div>
-
 {% endblock %}
 
 {% block javascript %}
 <script type="text/javascript">
-    $(document).ready(function() {
-        $('#info_message').on('click', function() {
+    $(document).ready(function () {
+        $('#info_message').on('click', function () {
             $('#info_message').hide();
         });
     });
 </script>
-
 
 <script type="text/javascript">
     $(document).scroll(function () {
@@ -94,7 +91,4 @@
             $('#circle_button').css('position', 'fixed'); // restore when you scroll up
     }
 </script>
-
-
-
 {% endblock %}

@@ -1,5 +1,6 @@
-{% extends 'layout.html' %} 
+{% extends 'layout.html' %}
 {% load static %}
+
 {% block body %}
 <div class="bounds circle--page">
   <div class="home-container">
@@ -10,65 +11,44 @@
         face, tell them a little about yourself - even your favourite colour.
       </p>
     </div>
-    </div>
+  </div>
 
-   
- 
   <!-- CAROUSEL -->
   <div class="grid-100">
-      <div class="slider-container">
-      
-          <div class="slider">
-            {% for user in users %}
-              <div class="slider_avatar_wrapper">
-                  <a href="{% url 'accounts:profile' user.pk %}">
-                      <img class="slider_avatar_circle" src="{{ user.profile.avatar.url }}" />
-                      <h3>{{ user.username }}</h3>
-                  </a>
-                  
-              </div>
-            {% endfor %}
-            </div>
-        
-  </div>
+    <div class="slider-container">
+      <div class="slider">
+        {% for user in users %}
+        <div class="slider_avatar_wrapper">
+          <a href="{% url 'accounts:profile' user.pk %}">
+            <img class="slider_avatar_circle" src="{{ user.profile.avatar.url }}" />
+            <h3>{{ user.username }}</h3>
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
   </div>
   <div class="footer_space"></div>
-  </div>
+</div>
+{% endblock %}
 
- 
-
-
-
-{% endblock %} 
 {% block css %}
-<link
-  rel="stylesheet"
-  type="text/css"
-  href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.css"
-/>
-<link rel="stylesheet" type="text/css" href="{% static 'css/slick-theme.css' %}"/>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.css" />
+<link rel="stylesheet" type="text/css" href="{% static 'css/slick-theme.css' %}" />
+{% endblock %}
 
-{% endblock %} 
 {% block javascript %}
-
-<script
-  type="text/javascript"
-  src="{% static 'js/slick.js' %}"
-></script>
+<script type="text/javascript" src="{% static 'js/slick.js' %}"></script>
 
 <script type="text/javascript">
   $(document).ready(function () {
     $('.slider').slick({
-      arrows:false,
+      arrows: false,
       autoplay: true,
       autoplaySpeed: 2000,
       adaptiveHeight: false,
       centerMode: true,
       centerPadding: '15px',
-      
-
-
-      
 
       dots: true,
       infinite: true,
@@ -104,7 +84,7 @@
         // instead of a settings object
       ]
     });
-        
+
   });
 
 </script>

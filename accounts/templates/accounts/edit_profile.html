@@ -1,8 +1,8 @@
-{% extends "layout.html" %} {% load static %} {% block title %}Profile |
-{{ super }}{% endblock %} {% block body %}
+{% extends "layout.html" %} 
+{% load static %} 
+{% block title %}Profile |{{ super }}{% endblock %} 
 
-
-
+{% block body %}
 <div class="bounds circle--page profile_page">
     <form method="POST" id="userform_and_profileform" data-cities-url="{% url 'accounts:ajax_load_cities' %}"
         enctype="multipart/form-data" action="">
@@ -15,16 +15,12 @@
                     <input type="file" class="sr-only" id="input" name="image" accept="image/*" hidden="True">
                     <p>Change</p>
                 </label>
-
         </div>
-
-
 
         <div class="grid-100 under_banner">
             {{ user.first_name.label }}
             <h1 class="headline">{{ user.username }}</h1>
         </div>
-
 
         <div class="grid-30">
             <p>
@@ -72,11 +68,8 @@
         <div class="grid-70">
             {{ profile_form.bio.label }}
             <div class="bio_wrapper">
-
                 {{ profile_form.bio.errors }}
                 {{ profile_form.bio }}
-
-
             </div>
             <p>
                 {{ user_form.email.errors }}
@@ -100,7 +93,8 @@
 </div>
 </form>
 </div>
-<!--avatar modal-->
+
+<!--avatar modal start-->
 <div class="modal_container">
     <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -124,7 +118,8 @@
         </div>
     </div>
 </div>
-<!--avatar modal-->
+<!--avatar modal end-->
+
 {% endblock %}
 <br />
 {% block css %}
@@ -145,11 +140,6 @@
     });
 </script>
 
-
-
-
-
-
 <script type="text/javascript">
 
     window.addEventListener('DOMContentLoaded', function () {
@@ -161,8 +151,6 @@
         var $alert = $('.alert');
         var $modal = $('#modal');
         var cropper;
-
-
 
         input.addEventListener('change', function (e) {
             var files = e.target.files;

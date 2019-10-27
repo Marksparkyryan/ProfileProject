@@ -1,5 +1,8 @@
-{% extends "layout.html" %} {% load static %} {% block title %}Sign Up |
-{{ super }}{% endblock %} {% block body %}
+{% extends "layout.html" %} 
+{% load static %} 
+{% block title %}Sign Up |{{ super }}{% endblock %} 
+
+{% block body %}
 <div class="home-section">
   <div class="home-container">
     <div class="grid-30">
@@ -29,14 +32,15 @@
           {{ form.password2 }}
           {{ form.password2.help_text }}
         </p>
-
         <input type="submit" class="button-primary" value="Sign Up" />
       </form>
     </div>
   </div>
 </div>
 
-{% endblock %} {% block javascript %}
+{% endblock %}
+
+{% block javascript %}
 <script type="text/javascript" src="{% static 'js/zxcvbn.js' %}"></script>
 
 <script>
@@ -51,7 +55,7 @@
   var password = document.getElementById("id_password1");
   var text = document.getElementById("password-strength-text");
 
-  password.addEventListener("input", function() {
+  password.addEventListener("input", function () {
     var val = password.value;
     var result = zxcvbn(val);
 
