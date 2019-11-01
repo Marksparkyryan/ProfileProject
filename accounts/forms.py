@@ -99,25 +99,6 @@ class UserForm(forms.Form):
 
     first_name = forms.CharField(max_length=56)
     last_name = forms.CharField(max_length=56)
-    email = forms.EmailField()
-    email2 = forms.EmailField(label="Email Confirmation")
-    password = forms.CharField(widget=forms.PasswordInput())
-
-    def clean(self):
-        """Ensure both user emails match
-        """
-        cleaned_data = super().clean()
-        email = cleaned_data.get('email')
-        email2 = cleaned_data.get('email2')
-
-        if email != email2:
-            msg = "Both emails must match."
-            self.add_error('email2', msg)
-
-        user = get_object_or_404(User, id=self.user.id)
-        passwordvalue = cleaned_data.get('password')
-        if not user.check_password(passwordvalue):
-            raise forms.ValidationError("Password is incorrect!")
 
 
 class ChangePasswordForm(forms.Form):
