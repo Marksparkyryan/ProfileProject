@@ -134,7 +134,8 @@ def change_password(request):
             user.save()
             update_session_auth_hash(request, password_form.user)
             messages.success(request, "Password changed successfully!")
-            return HttpResponseRedirect('accounts/profile')
+            return HttpResponseRedirect(reverse('accounts:profile', 
+                                                kwargs={'user_pk': user.id}))
     context = {
         'password_form': password_form,
         'user': user,

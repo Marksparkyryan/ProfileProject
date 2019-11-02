@@ -149,37 +149,42 @@ class ChangePasswordForm(forms.Form):
         old_pass = cleaned_data.get('old_password')
         new_pass = cleaned_data.get('new_password')
         new_pass2 = cleaned_data.get('new_password2')
-        print(self.user.first_name)
 
-        required_patterns = re.compile(r'''
-            ^(?P<lowercase>[a-z]*) # return empty string if lowercase not found
-            (?P<uppercase>[A-Z]*) # return empty string if uppercase not found
-            (?P<digit>[0-9]*) # return empty string if digit not found
-            (?P<at>@*) # return empty string if @ not found
-            (?P<pound>\#*) # return empty string if # not found
-            (?P<dollar>\$*)$ # return empty string if $ not found
-        ''', re.X)
+        if re.search(r'[a-z]', new_pass) == None:
+            msg = self.password_help_text['lowercase']
+            self.add_error('new_password', msg)
 
-        forbidden_patterns = re.compile(r'''
-            (?P<username>({username})*) # must not contain username
-            (?P<firstname>({first})*) # must not contain first name
-            (?P<lastname>({last})*) # must not contain last name
-        '''.format(username=self.user.username,
-                   first=self.user.first_name,
-                   last=self.user.last_name),
-                   re.X | re.I)
+        if re.search(r'[A-Z]', new_pass) == None:
+            msg = self.password_help_text['uppercase']
+            self.add_error('new_password', msg)
 
-        required_result = required_patterns.search(new_pass2).groupdict()
-        for key, value in required_result.items():
-            if not value:
-                msg = self.password_help_text[key]
-                self.add_error('new_password', msg)
+        if re.search(r'[0-9]', new_pass) == None:
+            msg = self.password_help_text['digit']
+            self.add_error('new_password', msg)
         
-        forbidden_result = forbidden_patterns.search(new_pass2).groupdict()
-        for key, value in forbidden_result.items():
-            if value:
-                msg = self.password_help_text[key]
-                self.add_error('new_password', msg)
+        if re.search(r'@', new_pass) == None:
+            msg = self.password_help_text['at']
+            self.add_error('new_password', msg)
+
+        if re.search(r'#', new_pass) == None:
+            msg = self.password_help_text['pound']
+            self.add_error('new_password', msg)
+
+        if re.search(r'\$', new_pass) == None:
+            msg = self.password_help_text['dollar']
+            self.add_error('new_password', msg)
+
+        if re.search(r'{{ self.user.username }}', new_pass) is not None:
+            msg = self.password_help_text['username']
+            self.add_error('new_password', msg)
+
+        if re.search(r'{{ self.user.first_name}}', new_pass) is not None:
+            msg = self.password_help_text['firstname']
+            self.add_error('new_password', msg)
+        
+        if re.search(r'{{ self.user.last_name }}', new_pass) is not None:
+            msg = self.password_help_text['lastname']
+            self.add_error('new_password', msg)
 
         if new_pass == old_pass:
             raise forms.ValidationError(
