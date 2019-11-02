@@ -100,6 +100,18 @@ class UserForm(forms.Form):
     first_name = forms.CharField(max_length=56)
     last_name = forms.CharField(max_length=56)
     email = forms.EmailField(max_length=56)
+    email2 = forms.EmailField(max_length=56, label="Email Confirmation")
+
+    def clean(self):
+        """Ensure both user emails match
+        """
+        cleaned_data = super().clean()
+        email = cleaned_data.get('email')
+        email2 = cleaned_data.get('email2')
+
+        if email != email2:
+            msg = "Both emails must match."
+            self.add_error('email2', msg)
 
 
 class ChangePasswordForm(forms.Form):
