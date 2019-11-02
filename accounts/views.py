@@ -83,6 +83,7 @@ def edit_profile(request):
     existing_data = {
         'first_name': user.first_name,
         'last_name': user.last_name,
+        'email': user.email,
     }
     user_form = UserForm(data=existing_data, user=user)
     profile = get_object_or_404(Profile, user=user)
@@ -97,6 +98,7 @@ def edit_profile(request):
             cleaned = user_form.cleaned_data
             user.first_name = cleaned['first_name']
             user.last_name = cleaned['last_name']
+            user.email = cleaned['email']
             user.save()
             profile = profile_form.save(commit=False)
             profile.user = user

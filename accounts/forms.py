@@ -99,6 +99,7 @@ class UserForm(forms.Form):
 
     first_name = forms.CharField(max_length=56)
     last_name = forms.CharField(max_length=56)
+    email = forms.EmailField(max_length=56)
 
 
 class ChangePasswordForm(forms.Form):
@@ -150,6 +151,7 @@ class ChangePasswordForm(forms.Form):
         new_pass = cleaned_data.get('new_password')
         new_pass2 = cleaned_data.get('new_password2')
 
+        # passord should contain following
         if re.search(r'[a-z]', new_pass) == None:
             msg = self.password_help_text['lowercase']
             self.add_error('new_password', msg)
@@ -174,15 +176,16 @@ class ChangePasswordForm(forms.Form):
             msg = self.password_help_text['dollar']
             self.add_error('new_password', msg)
 
-        if re.search(r'{{ self.user.username }}', new_pass) is not None:
+        #password should not contain following
+        if re.search(r'{{ self.user.username }}', new_pass, re.I) is not None:
             msg = self.password_help_text['username']
             self.add_error('new_password', msg)
 
-        if re.search(r'{{ self.user.first_name}}', new_pass) is not None:
+        if re.search(r'{{ self.user.first_name}}', new_pass, re.I) is not None:
             msg = self.password_help_text['firstname']
             self.add_error('new_password', msg)
         
-        if re.search(r'{{ self.user.last_name }}', new_pass) is not None:
+        if re.search(r'{{ self.user.last_name }}', new_pass, re.I) is not None:
             msg = self.password_help_text['lastname']
             self.add_error('new_password', msg)
 

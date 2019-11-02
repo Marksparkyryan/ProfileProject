@@ -165,9 +165,9 @@ class AccountsViewsTests(TestCase):
         """make sure sign out view logs user out"""
         session = self.client.force_login(self.user1)
         resp = self.client.get(reverse('home'))
-        self.assertContains(resp,"Sign out")
+        self.assertContains(resp,"Sign Out")
         resp = self.client.get(reverse('accounts:sign_out'), follow=True)
-        self.assertContains(resp, 'Sign in')
+        self.assertContains(resp, 'Sign In')
 
 
 class AccountsProfileModelTests(TestCase):
