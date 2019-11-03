@@ -189,17 +189,20 @@ class ChangePasswordForm(forms.Form):
             self.add_error('new_password', msg)
 
         #password should not contain following
-        if re.search(r'{{ self.user.username }}', new_pass, re.I) is not None:
+        if re.search(r'{}'.format(self.user.username), new_pass, re.I) is not None:
             msg = self.password_help_text['username']
             self.add_error('new_password', msg)
 
-        if re.search(r'{{ self.user.first_name}}', new_pass, re.I) is not None:
-            msg = self.password_help_text['firstname']
-            self.add_error('new_password', msg)
+        if re.search(r'{}'.format(self.user.first_name), new_pass, re.I) is not None:
+            if self.user.first_name != "":
+                print("first name: ", self.user.first_name)
+                msg = self.password_help_text['firstname']
+                self.add_error('new_password', msg)
         
-        if re.search(r'{{ self.user.last_name }}', new_pass, re.I) is not None:
-            msg = self.password_help_text['lastname']
-            self.add_error('new_password', msg)
+        if re.search(r'{}'.format(self.user.last_name), new_pass, re.I) is not None:
+            if self.user.last_name != "":
+                msg = self.password_help_text['lastname']
+                self.add_error('new_password', msg)
 
         if new_pass == old_pass:
             raise forms.ValidationError(

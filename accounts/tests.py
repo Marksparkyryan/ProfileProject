@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.test import TestCase
 
 from cities_light.models import Country, City
-from .forms import ProfileForm, UserForm
+from .forms import ProfileForm, UserForm, ChangePasswordForm
 from .models import Profile
 
 import datetime
@@ -261,6 +261,175 @@ class AccountsFormsTests(TestCase):
 
         profile_data['date_of_birth'] = ''
         self.assertTrue(profile_form.is_valid())
+
+    def test_password_change_form_minimum(self):
+        """Make sure new password meets minimum character count 
+        """
+        form = ChangePasswordForm(
+            user= self.user1,
+            data={
+                'old_password': 'TestPassword123@#$',
+                'new_password': 'Short@#$123',
+                'new_password2': 'Short@#$123',  
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertIn(form.errors['new_password'][0],
+                            "Your new password must be minimum 14 characters.")
+
+    def test_password_change_form_new_not_old(self):
+        """Make sure new pasword isn't old password
+        """
+        form = ChangePasswordForm(
+            user= self.user1,
+            data={
+                'old_password': 'TestPassword123@#$',
+                'new_password': 'TestPassword123@#',
+                'new_password2': 'TestPassword123@#$',  
+            }
+        )
+        self.assertFalse(form.is_valid())
+
+    def test_password_change_form_lowercase(self):
+        """Make sure new password meets lowercase requirement
+        """
+        form = ChangePasswordForm(
+            user= self.user1,
+            data={
+                'old_password': 'TestPassword123@#$',
+                'new_password': 'S@#$123',
+                'new_password2': 'S@#$123',  
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertIn(form.errors['new_password'][0],
+                            "must contain lowercase letters.")
+     
+    def test_password_change_form_uppercase(self):
+        """Make sure new password meets uppercase requirement
+        """
+        form = ChangePasswordForm(
+            user= self.user1,
+            data={
+                'old_password': 'TestPassword123@#$',
+                'new_password': 's@#$123',
+                'new_password2': 's@#$123',  
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertIn(form.errors['new_password'][0],
+                            "must contain uppercase letters.")
+
+    def test_password_change_form_digit(self):
+        """Make sure new password meets digit requirement
+        """
+        form = ChangePasswordForm(
+            user= self.user1,
+            data={
+                'old_password': 'TestPassword123@#$',
+                'new_password': 'TestPassword@#$',
+                'new_password2': 'TestPassword@#$',  
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertIn(form.errors['new_password'][0],
+                            "must include one or more numerical digits.")
+
+    def test_password_change_form_digit(self):
+        """Make sure new password meets @ character requirement
+        """
+        form = ChangePasswordForm(
+            user= self.user1,
+            data={
+                'old_password': 'TestPassword123@#$',
+                'new_password': 'TestPassword#$',
+                'new_password2': 'TestPassword#$',  
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertIn(form.errors['new_password'][0],
+                            "must contain @ sign.")
+
+    def test_password_change_form_digit(self):
+        """Make sure new password meets pound character requirement
+        """
+        form = ChangePasswordForm(
+            user= self.user1,
+            data={
+                'old_password': 'TestPassword123@#$',
+                'new_password': 'TestPassword@$',
+                'new_password2': 'TestPassword@$',  
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertIn(form.errors['new_password'][0],
+                            "must contain # sign.")
+
+    def test_password_change_form_digit(self):
+        """Make sure new password meets dollar character requirement
+        """
+        form = ChangePasswordForm(
+            user= self.user1,
+            data={
+                'old_password': 'TestPassword123@#$',
+                'new_password': 'TestPassword@#',
+                'new_password2': 'TestPassword@#',  
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertIn(form.errors['new_password'][0],
+                            "must contain $ sign.")
+
+    def test_password_change_form_digit(self):
+        """Make sure new password doesn't contain username
+        """
+        form = ChangePasswordForm(
+            user= self.user1,
+            data={
+                'old_password': 'TestPassword123@#$',
+                'new_password': 'TestPassword@$johny',
+                'new_password2': 'TestPassword@$johny',  
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertIn(form.errors['new_password'][0],
+                            "cannot contain your username.")
+
+    def test_password_change_form_digit(self):
+        """Make sure new password doesn't contain first name
+        """
+        form = ChangePasswordForm(
+            user= self.user1,
+            data={
+                'old_password': 'TestPassword123@#$',
+                'new_password': 'TestPassword@$john',
+                'new_password2': 'TestPassword@$john',  
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertIn(form.errors['new_password'][0],
+                            "cannot contain your first name.")
+
+    def test_password_change_form_digit(self):
+        """Make sure new password doesn't contain last name
+        """
+        form = ChangePasswordForm(
+            user= self.user1,
+            data={
+                'old_password': 'TestPassword123@#$',
+                'new_password': 'TestPassword@#$smith123',
+                'new_password2': 'TestPassword@#$smith123',  
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertIn("cannot contain your last name",
+        form.errors['new_password'][0])
+
+
+
+
+
+
     
 
 
