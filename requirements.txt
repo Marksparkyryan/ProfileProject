@@ -1,7 +1,7 @@
 astroid==2.3.0
 autopep8==1.4.4
 coverage==4.5.4
-Django==1.9.9
+Django==1.11.28
 django-autoslug-iplweb==1.9.4.dev0
 django-cities-light==3.5.0
 django-ckeditor==5.7.1
